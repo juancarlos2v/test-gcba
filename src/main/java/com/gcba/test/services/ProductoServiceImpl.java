@@ -48,4 +48,9 @@ public class ProductoServiceImpl implements ProductoService {
     public void delete(Long id) {
         productoRepository.deleteById(id);
     }
+
+    @Override
+    public List<Producto> productosSinDescripcion() {
+        return productoRepository.findByNombreNotNullAndDescripcionNull();
+    }
 }
