@@ -2,7 +2,7 @@ package com.gcba.test.controllers;
 
 import com.gcba.test.dto.RecuentoEstado;
 import com.gcba.test.entities.Venta;
-import com.gcba.test.services.VentaService;
+import com.gcba.test.services.VentaServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class VentaController {
 
-    private final VentaService ventaService;
+    private final VentaServiceImpl ventaService;
 
     @GetMapping
     public List<Venta> getAllVentas() {
