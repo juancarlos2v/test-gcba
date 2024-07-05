@@ -6,32 +6,30 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-import java.util.Set;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "detalleVenta")
+@Table(name = "detalle_venta")
 public class DetalleVenta {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_detalle")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_venta")
+    @JoinColumn(name = "id_venta", nullable = false)
     private Venta venta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_producto")
-    private Producto productos;
+    @JoinColumn(name = "id_producto",nullable = false)
+    private Producto producto;
 
-    @Column(name = "cantidad")
+    @Column(name = "cantidad",nullable = false)
     private Integer cantidad;
-    @Column(name = "precio_unitario")
+    @Column(name = "precio_unitario",nullable = false)
     private Double precio;
 
 }

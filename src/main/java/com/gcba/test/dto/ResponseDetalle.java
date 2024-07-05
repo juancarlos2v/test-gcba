@@ -4,13 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseMessage {
-    private HttpStatus code;
-    private String message;
+public class ResponseDetalle {
+    private Long id;
+    private String cliente;
+    private String producto;
+    private Double precio;
+    private Integer cantidad;
+    private Double total;
+
+
 }

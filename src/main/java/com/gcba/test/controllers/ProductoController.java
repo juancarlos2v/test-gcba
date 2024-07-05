@@ -11,35 +11,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/productos")
 @AllArgsConstructor
 public class ProductoController {
 
     private final ProductoService service;
 
-    @GetMapping("/productos")
+    @GetMapping
     public List<Producto> getAllProducts() {
         return service.getAll();
     }
 
-    @GetMapping("/producto/{id}")
+    @GetMapping("/{id}")
     public ProductoDTO getProduct(@PathVariable Long id){
         return  service.getById(id);
     }
 
-    @PostMapping("/producto")
+    @GetMapping("/sin-descripcion")
+    public List<Producto> getProductSinDescripcion(){
+        return service.productosSinDescripcion();
+    }
+
+    @PostMapping
     public ResponseEntity<ProductoDTO> addProduct(@RequestBody Producto producto) {
         ProductoDTO p = service.add(producto);
         return ResponseEntity.status(HttpStatus.CREATED).body(p);
     }
 
-    @PutMapping("/producto")
+    @PutMapping
     public ResponseEntity<ProductoDTO> updateProduct(@RequestBody Producto producto) {
         ProductoDTO p = service.update(producto);
         return ResponseEntity.status(HttpStatus.OK).body(p);
     }
 
-    @DeleteMapping("/producto/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity .status(HttpStatus.NO_CONTENT).body("Producto Eliminado" );

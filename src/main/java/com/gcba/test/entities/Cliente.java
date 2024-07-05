@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id_cliente")
     private Long id;
     @Column(name="nombre")
     private String nombre;
