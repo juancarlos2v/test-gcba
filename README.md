@@ -2,6 +2,7 @@
 
 Operaciones básicas realizadas (crear, leer, actualizar, eliminar) y cómo interactúan con la base de datos.
 
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://god.gw.postman.com/run-collection/19616140-b60dc1a0-fb5d-451c-8f5f-e7864f76dccc?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D19616140-b60dc1a0-fb5d-451c-8f5f-e7864f76dccc%26entityType%3Dcollection%26workspaceId%3D323dac41-2fca-42b4-9c52-907c44e893ac)
 
 ## Consumo de API desde el Frontend
 
