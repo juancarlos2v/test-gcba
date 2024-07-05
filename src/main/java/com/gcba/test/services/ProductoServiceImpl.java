@@ -1,16 +1,15 @@
 package com.gcba.test.services;
 
 import com.gcba.test.dto.ProductoDTO;
-import com.gcba.test.dto.ResponseDetalle;
-import com.gcba.test.entities.DetalleVenta;
 import com.gcba.test.entities.Producto;
-import com.gcba.test.repositories.DetalleVentaRepository;
 import com.gcba.test.repositories.ProductoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,29 +19,42 @@ import java.util.stream.Collectors;
 public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepository;
-    private final DetalleVentaServiceImpl detalleVentaService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Producto> getAll() {
-        return productoRepository.findAll();
+        try {
+            return productoRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener la lista de productos");
+        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ProductoDTO getById(Long id) {
-        Producto p = productoRepository.findById(id).orElse(null);
+        Producto p = productoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
         return new ProductoDTO(p);
     }
 
     @Override
+    @Transactional
     public ProductoDTO add(Producto producto) {
-        productoRepository.save(producto);
-        return new ProductoDTO(producto);
+        try {
+            if (producto.getId() != null) throw new IllegalArgumentException("ID no de debe agregarse manualmente");
+            productoRepository.save(producto);
+            return new ProductoDTO(producto);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("Error al agregar producto: " + e.getMessage());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("No se pudo procesar la solictud");
+        }
     }
 
     @Override
     @Transactional
     public ProductoDTO update(Producto producto) {
-        Producto p = productoRepository.findById(producto.getId()).orElse(null);
+        Producto p = productoRepository.findById(producto.getId()).orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
         p.setNombre(producto.getNombre());
         p.setDescripcion(producto.getDescripcion());
         p.setPrecio(producto.getPrecio());
@@ -52,21 +64,16 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        productoRepository.deleteById(id);
+        try {
+            productoRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new EntityNotFoundException("Producto con ID: " + id + ", no encontrado");
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo procesar la solictud: " + e.getMessage());
+        }
     }
 
-    @Override
-    public List<Producto> productosSinDescripcion() {
-        return productoRepository.findByNombreNotNullAndDescripcionNull();
-    }
 
-    @Override
-    public List<Producto> getProductsSoldLastDay() {
-        List<Producto> productos=getAll();
-        Set<Long> idProducts=detalleVentaService.getIdProductSoldLastDay();
-        return productos.stream()
-                .filter(producto->idProducts.contains(producto.getId()))
-                .collect(Collectors.toList());
-    }
 }
