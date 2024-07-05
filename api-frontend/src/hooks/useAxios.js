@@ -5,7 +5,7 @@ import axios from "axios";
 
 const useAxios = () => {
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const fetchData = (options) => {
@@ -21,13 +21,16 @@ const useAxios = () => {
       data: data ?? null,
     })
       .then((res) => {
+        setError("");
         setResponse(res.data);
-        //console.log(res.data);
+        console.log(res.data);
+        res.data.errorMessage && setError(res.data.errorMessage);
+        console.log(error);
         setLoading(false);
       })
       .catch((err) => {
         //setError(err.response.data.response);
-        console.log(err.response);
+        //console.log(err.response);
         setLoading(false);
       });
   };
