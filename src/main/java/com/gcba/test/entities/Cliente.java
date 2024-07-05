@@ -11,20 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="producto")
-public class Producto {
+@Table(name="cliente")
+public class Cliente {
 
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
-    @Column(name="id_producto")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id_cliente")
     private Long id;
     @Column(name="nombre")
     private String nombre;
-    @Column(name="descripcion")
-    private String descripcion;
-    @Column(name="precio")
-    private Double precio;
-    @Column(name="cantidad")
-    private Integer cantidad;
-
+    @Column(name="email")
+    private String email;
+    @Column(name="direccion")
+    private String direccion;
 }
