@@ -6,16 +6,16 @@ import com.gcba.test.entities.Cliente;
 import com.gcba.test.entities.DetalleVenta;
 import com.gcba.test.entities.Producto;
 import com.gcba.test.entities.Venta;
-import com.gcba.test.enums.EstadoVenta;
+
 import com.gcba.test.repositories.ClienteRepository;
 import com.gcba.test.repositories.DetalleVentaRepository;
 import com.gcba.test.repositories.ProductoRepository;
-import com.gcba.test.repositories.VentaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class DetalleVentaServiceImpl implements DetalleVentaService {
 
     private final ProductoRepository productoRepository;
-    private final VentaRepository ventaRepository;
     private final DetalleVentaRepository detalleVentaRepository;
     private final ClienteRepository clienteRepository;
     private final VentaServiceImpl ventaService;
@@ -35,10 +34,9 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
         Cliente c = clienteRepository.findById(request.getId_cliente()).orElse(null);
 
         Double total = request.getCantidad() * p.getPrecio();
+        Venta v = ventaService.create("PENDIENTE", total, c);
 
-        Venta v= ventaService.create("PENDIENTE",total,c);
-
-        DetalleVenta dv= DetalleVenta.builder()
+        DetalleVenta dv = DetalleVenta.builder()
                 .cantidad(request.getCantidad())
                 .precio(p.getPrecio())
                 .producto(p)
@@ -61,23 +59,38 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
     @Transactional
     @Override
     public ResponseDetalle getById(Long id) {
-        DetalleVenta detalleVenta=detalleVentaRepository.findById(id).orElse(null);
+        DetalleVenta detalleVenta = detalleVentaRepository.findById(id).orElse(null);
         return convertToResponseDetalle(detalleVenta);
     }
 
 
     @Override
-    public ResponseDetalle convertToResponseDetalle(DetalleVenta detalleVenta){
-        Venta venta= detalleVenta.getVenta();
-        Producto producto=detalleVenta.getProducto();
-        Cliente client=venta.getCliente();
+    public ResponseDetalle convertToResponseDetalle(DetalleVenta detalleVenta) {
+        Venta venta = detalleVenta.getVenta();
+        Producto producto = detalleVenta.getProducto();
+        Cliente client = venta.getCliente();
         return ResponseDetalle.builder()
                 .id(detalleVenta.getId())
-                .cliente(client.getNombre())
+                .id_venta(venta.getId())
+                .id_producto(producto.getId())
                 .producto(producto.getNombre())
                 .precio(producto.getPrecio())
                 .cantidad(detalleVenta.getCantidad())
-                .total(venta.getMonto())
                 .build();
+    }
+
+    @Override
+    public Set<Long> getIdProductSoldLastDay() {
+        List<ResponseDetalle> detalles = getAll();
+        List<Venta> ventas = ventaService.getSoldLastDay();
+
+        Set<Long> ventasId = ventas.stream()
+                .map(Venta::getId)
+                .collect(Collectors.toSet());
+
+        return detalles.stream()
+                .filter(detalle ->ventasId.contains(detalle.getId_venta()))
+                .map(ResponseDetalle::getId_producto)
+                .collect(Collectors.toSet());
     }
 }

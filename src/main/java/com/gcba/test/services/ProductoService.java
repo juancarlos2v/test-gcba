@@ -13,4 +13,5 @@ public interface ProductoService {
     ProductoDTO update(Producto producto);
     void delete(Long id);
     List<Producto> productosSinDescripcion();
+    List<Producto> getProductsSoldLastDay();
 }
