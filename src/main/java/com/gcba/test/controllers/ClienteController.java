@@ -1,7 +1,7 @@
 package com.gcba.test.controllers;
 
 import com.gcba.test.entities.Cliente;
-import com.gcba.test.services.ClienteServiceImpl;
+import com.gcba.test.services.ClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ClienteController {
 
-    private final ClienteServiceImpl clienteService;
+    private final ClienteService clienteService;
 
     @PostMapping
     public ResponseEntity<Object> getCliente(@RequestBody Cliente cliente) {
