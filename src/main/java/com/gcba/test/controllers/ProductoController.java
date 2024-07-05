@@ -2,6 +2,7 @@ package com.gcba.test.controllers;
 
 import com.gcba.test.dto.ProductoDTO;
 import com.gcba.test.entities.Producto;
+import com.gcba.test.exception.RequestException;
 import com.gcba.test.services.ProductoService;
 import com.gcba.test.services.ProductoServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,14 +27,9 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDTO> getProduct(@PathVariable Long id) {
-        try {
             ProductoDTO product = productoService.getById(id);
+          //  if(product == null)throw new RequestException("P-404", "Producto no encontrado");
             return ResponseEntity.status(HttpStatus.OK).body(product);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     @PostMapping
@@ -44,26 +40,13 @@ public class ProductoController {
 
     @PutMapping
     public ResponseEntity<ProductoDTO> updateProduct(@RequestBody Producto producto) {
-        try {
             ProductoDTO p = productoService.update(producto);
             return ResponseEntity.status(HttpStatus.OK).body(p);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
-        try {
-            productoService.delete(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        productoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
 }
