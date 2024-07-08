@@ -13,10 +13,18 @@ Implementación de una página que consume un servicio externo para normalizar d
 - URL del servicio: [http://servicios.usig.buenosaires.gob.ar/normalizar/](http://servicios.usig.buenosaires.gob.ar/normalizar/)
 - Ejemplo de uso: `/api/normalizar/?direccion=${request}`
 
-<div style="display: flex; justify-content: center;">
-  <img src="app_dire.png" alt="Imagen 1" style="width: 300px; margin-right: 20px;">
-  <img src="app_error.png" alt="Imagen 2" style="width: 300px;">
-</div>
+   ```
+  ./
+    └── api-frontend/
+      └── src/
+        └── app/
+          └── page.jsx
+  ```
+
+  <div style="display: flex; justify-content: center;">
+    <img src="app_dire.png" alt="Imagen 1" style="width: 300px; margin-right: 20px;">
+    <img src="app_error.png" alt="Imagen 2" style="width: 300px;">
+  </div>
 
 ## Preguntas de Git
 
